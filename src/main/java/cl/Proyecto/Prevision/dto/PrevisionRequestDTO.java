@@ -17,7 +17,5 @@ public class PrevisionRequestDTO {
     @NotBlank(message = "El nombre no puede estar vacio")
     private String nombre;
 
-    @NotNull(message = "El descuento es oobligatorio")
-    @Positive(message = "El descuento debe ser mayor a 0")
-    private BigDecimal descuento;
+
 }

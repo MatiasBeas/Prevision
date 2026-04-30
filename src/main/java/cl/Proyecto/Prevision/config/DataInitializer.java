@@ -25,11 +25,11 @@ public class DataInitializer implements CommandLineRunner {
 
         log.info(">>> DataInitializer: BD vacía detectada, insertando datos de prueba...");
 
-        previsionRepository.save(new Prevision(null, "Fonasa", new BigDecimal("20.00")));
-        previsionRepository.save(new Prevision(null, "Isapre Cruz Blanca", new BigDecimal("30.00")));
-        previsionRepository.save(new Prevision(null, "Isapre Banmédica", new BigDecimal("35.00")));
-        previsionRepository.save(new Prevision(null, "Isapre Colmena", new BigDecimal("32.00")));
-        previsionRepository.save(new Prevision(null, "Dipreca", new BigDecimal("25.00")));
+        previsionRepository.save(new Prevision(null, "Fonasa"));
+        previsionRepository.save(new Prevision(null, "Isapre Cruz Blanca"));
+        previsionRepository.save(new Prevision(null, "Isapre Banmédica"));
+        previsionRepository.save(new Prevision(null, "Isapre Colmena"));
+        previsionRepository.save(new Prevision(null, "Dipreca"));
 
         log.info(">>> DataInitializer: {} previsiones insertadas correctamente.",
                 previsionRepository.count());

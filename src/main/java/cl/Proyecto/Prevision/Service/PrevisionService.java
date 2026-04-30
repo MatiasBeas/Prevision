@@ -19,9 +19,8 @@ public class PrevisionService {
     //Mapeo Privado: Entidad -> Response
     private PrevisionResponseDTO mapToDTO(Prevision prevision){
         return new PrevisionResponseDTO(
-                prevision.getId(),
-                prevision.getNombre(),
-                prevision.getDescuento()
+                prevision.getIdPrevision(),
+                prevision.getNombre()
         );
     }
 
@@ -37,8 +36,7 @@ public class PrevisionService {
     public PrevisionResponseDTO guardar(PrevisionRequestDTO dto){
         Prevision prevision = new Prevision(
                 null,
-                dto.getNombre(),
-                dto.getDescuento()
+                dto.getNombre()
         );
         return  mapToDTO(previsionRepository.save(prevision));
     }
@@ -46,7 +44,6 @@ public class PrevisionService {
     public Optional<PrevisionResponseDTO> actualizar(Long id, PrevisionRequestDTO dto){
         return previsionRepository.findById(id)
                 .map(existente -> {existente.setNombre(dto.getNombre());
-                existente.setDescuento(dto.getDescuento());
                 return mapToDTO(previsionRepository.save(existente));
                 });
     }
