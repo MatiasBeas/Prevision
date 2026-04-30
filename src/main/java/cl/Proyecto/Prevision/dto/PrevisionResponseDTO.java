@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class PrevisionResponseDTO {
 
-    private Long id;
+    private Long idPrevision;
     private String nombre;
-    private BigDecimal descuento;
 }

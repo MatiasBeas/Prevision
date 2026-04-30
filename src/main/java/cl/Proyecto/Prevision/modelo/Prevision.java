@@ -15,11 +15,9 @@ import java.math.BigDecimal;
 public class Prevision {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idPrevision;
 
     @Column(nullable = false, length = 100)
     private String nombre;
 
-    @Column(nullable = false, precision = 5, scale = 2)
-    private BigDecimal descuento;
 }
