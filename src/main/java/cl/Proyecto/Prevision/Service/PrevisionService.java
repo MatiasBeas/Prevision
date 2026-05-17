@@ -2,7 +2,7 @@ package cl.Proyecto.Prevision.Service;
 
 import cl.Proyecto.Prevision.dto.PrevisionRequestDTO;
 import cl.Proyecto.Prevision.dto.PrevisionResponseDTO;
-import cl.Proyecto.Prevision.modelo.Prevision;
+import cl.Proyecto.Prevision.model.Prevision;
 import cl.Proyecto.Prevision.repository.PrevisionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class PrevisionService {
     private final PrevisionRepository previsionRepository;
 
-    //Mapeo Privado: Entidad -> Response
+    //-----------------MAPEO PRIVADO: PREVISION -> ResponseDTO----------
     private PrevisionResponseDTO mapToDTO(Prevision prevision){
         return new PrevisionResponseDTO(
                 prevision.getIdPrevision(),
@@ -26,6 +26,7 @@ public class PrevisionService {
         );
     }
 
+    //-----------------BUSCAR PREVISIONES DE DISTINTAS FORMAS----------
     public List<PrevisionResponseDTO> obtenerTodos(){
         log.info("Consultando TODAS las previsiones");
         return previsionRepository.findAll().stream()
@@ -37,6 +38,7 @@ public class PrevisionService {
         return previsionRepository.findById(id).map(this::mapToDTO);
     }
 
+    //-----------------GUARDAR PREVISION----------
     public PrevisionResponseDTO guardar(PrevisionRequestDTO dto){
         log.info("Creando Prevision");
         Prevision prevision = new Prevision(
@@ -46,6 +48,7 @@ public class PrevisionService {
         return  mapToDTO(previsionRepository.save(prevision));
     }
 
+    //-----------------ACTUALIZACION PREVISION----------
     public Optional<PrevisionResponseDTO> actualizar(Long id, PrevisionRequestDTO dto){
         log.info("Actualizando Prevision con ID: " + id);
         return previsionRepository.findById(id)
@@ -54,6 +57,7 @@ public class PrevisionService {
                 });
     }
 
+    //-----------------ELIMINAR PACIENTE----------
     public void eliminar(Long id){
         previsionRepository.deleteById(id);
         log.info("Eliminado Prevision con ID: "+ id);

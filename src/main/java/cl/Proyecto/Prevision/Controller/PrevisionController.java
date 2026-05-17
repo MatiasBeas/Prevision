@@ -16,6 +16,7 @@ import java.util.List;
 public class PrevisionController {
     private final PrevisionService previsionService;
 
+    //-----------------BUSCAR PREVISIONES DE DISTINTAS FORMAS----------
     @GetMapping
     public ResponseEntity<List<PrevisionResponseDTO>> obtenerTodos(){
         return ResponseEntity.ok(previsionService.obtenerTodos());
@@ -28,6 +29,7 @@ public class PrevisionController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    //-----------------GUARDAR PREVISION----------
     @PostMapping
     public ResponseEntity<PrevisionResponseDTO> crear(
             @Valid @RequestBody PrevisionRequestDTO dto) {
@@ -35,12 +37,14 @@ public class PrevisionController {
         return ResponseEntity.status(201).body(response);
     }
 
+    //-----------------ACTUALIZACION PREVISION----------
     @PutMapping("/{id}")
     public ResponseEntity<PrevisionResponseDTO> actualizar(@PathVariable Long id, @Valid @RequestBody PrevisionRequestDTO dto){
         return previsionService.actualizar(id,dto).map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    //-----------------ELIMINAR PREVISION----------
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id){
         if (previsionService.obtenerPorId(id).isEmpty()){

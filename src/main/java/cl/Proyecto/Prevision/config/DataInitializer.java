@@ -1,13 +1,11 @@
 package cl.Proyecto.Prevision.config;
 
-import cl.Proyecto.Prevision.modelo.Prevision;
+import cl.Proyecto.Prevision.model.Prevision;
 import cl.Proyecto.Prevision.repository.PrevisionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 
 @Slf4j
 @Component
