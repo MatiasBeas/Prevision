@@ -19,20 +19,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filtroPro(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
+        http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-
-                        // Swagger
                         .requestMatchers(
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
+                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
                                 "/doc/swagger-ui.html",
                                 "/doc/swagger-ui/**"
                         ).permitAll()
-
-                        // API
                         .requestMatchers(HttpMethod.GET, "/previsiones/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/previsiones/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/previsiones/**").authenticated()
@@ -41,7 +34,6 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .httpBasic(httpBasic -> {});
-
         return http.build();
     }
     @Bean
