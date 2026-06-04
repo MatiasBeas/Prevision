@@ -22,12 +22,26 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+
+                        // Swagger
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/doc/swagger-ui.html",
+                                "/doc/swagger-ui/**"
+                        ).permitAll()
+
+                        // API
                         .requestMatchers(HttpMethod.GET, "/previsiones/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/previsiones/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/previsiones/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/previsiones/**").authenticated()
+
+                        .anyRequest().authenticated()
                 )
                 .httpBasic(httpBasic -> {});
+
         return http.build();
     }
     @Bean
