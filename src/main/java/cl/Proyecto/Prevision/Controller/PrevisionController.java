@@ -60,7 +60,7 @@ public class PrevisionController {
 
     //-----------------GUARDAR PREVISION----------
     @Operation(summary = "Creacion de previsiones", description = "Se guardara la prevision con un ID autoincremental y los datos que se ingresen.")
-    @ApiResponse(responseCode = "201", description = "Ciudad creada exitosamente")
+    @ApiResponse(responseCode = "201", description = "Prevision creada exitosamente")
     @PostMapping
     public ResponseEntity<EntityModel<PrevisionResponseDTO>> crearPrevision(@Valid @RequestBody PrevisionRequestDTO dto) {
         PrevisionResponseDTO prevision = previsionService.guardar(dto);
@@ -75,7 +75,7 @@ public class PrevisionController {
     })
     @PutMapping("/{id}")
     public ResponseEntity<EntityModel<PrevisionResponseDTO>> actualizar(
-            @Parameter(description = "ID de la ciudad que se desea actualizar", example = "1")
+            @Parameter(description = "ID de la Prevision que se desea actualizar", example = "1")
             @PathVariable Long id,
             @Valid @RequestBody PrevisionRequestDTO dto) {
         return previsionService.actualizar(id, dto)
@@ -86,12 +86,12 @@ public class PrevisionController {
     //-----------------ELIMINAR PREVISION----------
     @Operation(summary = "Eliminacion de previsiones.", description = "Se eliminara la prevision segun el ID que se desea.")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Ciudad eliminada con éxito (No Content)"),
-            @ApiResponse(responseCode = "404", description = "La ciudad no existe")
+            @ApiResponse(responseCode = "204", description = "Prevision eliminada con éxito (No Content)"),
+            @ApiResponse(responseCode = "404", description = "La Prevision no existe")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarPrevision(
-            @Parameter(description = "ID de la ciudad que se desea eliminar", example = "1")
+            @Parameter(description = "ID de la Prevision que se desea eliminar", example = "1")
             @PathVariable Long id) {
         if (previsionService.obtenerPorId(id).isEmpty()) {
             return ResponseEntity.notFound().build();
