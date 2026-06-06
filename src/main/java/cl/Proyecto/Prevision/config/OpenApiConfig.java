@@ -22,6 +22,6 @@ public class OpenApiConfig {
                 .url("https://www.hospitalfricke.cl/"))
                 .license(new License()
                         .name("Hospital Viña del Mar")
-                        .url("https://romboticket.cl/licencia")));
+                        .url("https://www.hospitalfricke.cl/prevision")));
     }
 }
