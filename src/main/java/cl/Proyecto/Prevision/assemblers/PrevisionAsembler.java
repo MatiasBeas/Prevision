@@ -16,6 +16,6 @@ public class PrevisionAsembler implements RepresentationModelAssembler <Previsio
     public EntityModel<PrevisionResponseDTO> toModel(PrevisionResponseDTO prevision){
         return EntityModel.of(prevision,
                 linkTo(methodOn(PrevisionController.class).obtenerPorId(prevision.getIdPrevision())).withSelfRel(),
-                linkTo(methodOn(PrevisionController.class).obtenerTodos()).withRel("todas-las-ciudades"));
+                linkTo(methodOn(PrevisionController.class).obtenerTodos()).withRel("todas-las-previsiones"));
     }
 }
