@@ -1,52 +1,60 @@
 package cl.Proyecto.Prevision.config;
 
+import cl.Proyecto.Prevision.security.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final JwtFilter jwtFilter;
+
+    public SecurityConfig(JwtFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
+    }
 
     @Bean
     public SecurityFilterChain filtroPro(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(
-                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
-                                "/doc/swagger-ui.html",
+                                "/v3/api-docs/**", "/swagger-ui/**",
+                                "/swagger-ui.html", "/doc/swagger-ui.html",
                                 "/doc/swagger-ui/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/previsiones/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/previsiones/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/previsiones/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/previsiones/**").authenticated()
-
                         .anyRequest().authenticated()
                 )
-                .httpBasic(httpBasic -> {});
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
+
     @Bean
-    public InMemoryUserDetailsManager userDetailsManager(PasswordEncoder encoder) {
-        UserDetails user = User.builder()
-                .username("Maty")
-                .password(encoder.encode("DuocUC..2026"))
-                .roles("ADMIN")
-                .build();
-        return new InMemoryUserDetailsManager(user);
-    }
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 }
