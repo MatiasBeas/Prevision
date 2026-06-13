@@ -7,6 +7,7 @@ import cl.Proyecto.Prevision.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -65,7 +66,10 @@ public class SecurityConfig {
                         ).permitAll()
 
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/examenes/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/previsiones/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/previsiones/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/previsiones/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/previsiones/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
