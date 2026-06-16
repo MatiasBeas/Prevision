@@ -1,4 +1,4 @@
-package cl.Proyecto.Prevision;
+package cl.Proyecto.Prevision.ServiceTest;
 
 import cl.Proyecto.Prevision.Service.PrevisionService;
 import cl.Proyecto.Prevision.dto.PrevisionRequestDTO;

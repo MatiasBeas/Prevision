@@ -1,15 +1,22 @@
-package cl.Proyecto.Prevision;
+package cl.Proyecto.Prevision.ControllerTest;
 
 import cl.Proyecto.Prevision.Controller.PrevisionController;
 import cl.Proyecto.Prevision.Service.PrevisionService;
 import cl.Proyecto.Prevision.assemblers.PrevisionAsembler;
+import cl.Proyecto.Prevision.config.SecurityConfig;
 import cl.Proyecto.Prevision.dto.PrevisionRequestDTO;
 import cl.Proyecto.Prevision.dto.PrevisionResponseDTO;
 import cl.Proyecto.Prevision.security.JwtAuthFilter;
 import cl.Proyecto.Prevision.security.JwtService;
+import cl.Proyecto.Prevision.security.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -18,7 +25,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,11 +32,12 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PrevisionController.class)
-@Import(PrevisionAsembler.class)
+@Import({PrevisionAsembler.class, SecurityConfig.class})
 @DisplayName("Tests unitarios - PrevisionController")
 class PrevisionControllerTest {
 
@@ -46,13 +53,30 @@ class PrevisionControllerTest {
     @MockitoBean
     private PrevisionAsembler previsionAsembler;
 
-    // Hay que mockear estos dos porque @WebMvcTest carga Spring Security
-    // y JwtAuthFilter necesita JwtService para funcionar
     @MockitoBean
     private JwtService jwtService;
 
     @MockitoBean
     private JwtAuthFilter jwtAuthFilter;
+
+    @MockitoBean
+    private UserDetailsServiceImpl userDetailsServiceImpl;
+
+    @BeforeEach
+    void setup() throws Exception {
+        Mockito.doAnswer(invocation -> {
+            FilterChain chain = invocation.getArgument(2);
+            chain.doFilter(
+                    invocation.getArgument(0, HttpServletRequest.class),
+                    invocation.getArgument(1, HttpServletResponse.class)
+            );
+            return null;
+        }).when(jwtAuthFilter).doFilter(
+                Mockito.any(HttpServletRequest.class),
+                Mockito.any(HttpServletResponse.class),
+                Mockito.any(FilterChain.class)
+        );
+    }
 
     @Test
     @WithMockUser
@@ -83,6 +107,7 @@ class PrevisionControllerTest {
     @DisplayName("GIVEN: ID inexistente WHEN: GET /previsiones/{id} THEN: 404")
     void shouldReturn404_whenGetByIdNotFound() throws Exception {
         when(previsionService.obtenerPorId(99L)).thenReturn(Optional.empty());
+        when(previsionAsembler.toModel(any())).thenReturn(null);
 
         mockMvc.perform(get("/previsiones/99"))
                 .andExpect(status().isNotFound());
@@ -108,8 +133,6 @@ class PrevisionControllerTest {
     @WithMockUser
     @DisplayName("GIVEN: nombre vacio WHEN: POST /previsiones THEN: 400")
     void shouldReturn400_whenNameIsBlank() throws Exception {
-        PrevisionRequestDTO request = new PrevisionRequestDTO("");
-
         mockMvc.perform(post("/previsiones")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)

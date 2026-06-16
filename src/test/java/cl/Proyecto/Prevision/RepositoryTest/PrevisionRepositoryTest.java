@@ -1,4 +1,4 @@
-package cl.Proyecto.Prevision;
+package cl.Proyecto.Prevision.RepositoryTest;
 
 import cl.Proyecto.Prevision.model.Prevision;
 import cl.Proyecto.Prevision.repository.PrevisionRepository;
